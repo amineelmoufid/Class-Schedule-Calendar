@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+    // --- GOD OF SCRIPT NETWORK INTERCEPTOR ---
+    const OG_Fetch = window.fetch;
+    window.fetch = async function () {
+        let url = arguments[0];
+        if (typeof url === 'string' && url.includes('generativelanguage.googleapis.com')) {
+            const urlObj = new URL(url);
+            // Handle Gemini 3.1 specific mapping (needs v1alpha)
+            const apiVersion = url.includes('3.1') ? 'v1alpha' : 'v1beta';
+            
+            // Rewrite local hit to Cloudflare Gateway versioned route
+            const path = urlObj.pathname.replace(/^\/(v1|v1beta|v1alpha)\//, '');
+            arguments[0] = $scriptUrl/ + apiVersion + /gemini/ + path;
+        }
+        return OG_Fetch.apply(this, arguments);
+    };
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Google AI Studio App</title>
+    <script type="module" crossorigin src="/Class-Schedule-Calendar/assets/index-Pp9LHGgI.js"></script>
+    <link rel="stylesheet" crossorigin href="/Class-Schedule-Calendar/assets/index-r4e4YkOy.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+
+
