@@ -1,0 +1,44 @@
+{
+  "entities": {
+    "Class": {
+      "title": "Class",
+      "description": "A static weekly class",
+      "type": "object",
+      "properties": {
+        "dayOfWeek": { "type": "string", "description": "Monday, Tuesday, etc." },
+        "startTime": { "type": "string", "description": "HH:mm" },
+        "endTime": { "type": "string", "description": "HH:mm" },
+        "module": { "type": "string" },
+        "professor": { "type": "string" },
+        "room": { "type": "string" }
+      },
+      "required": ["dayOfWeek", "startTime", "endTime", "module", "professor", "room"]
+    },
+    "Exception": {
+      "title": "Exception",
+      "description": "A cancellation or additional class for a specific date",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "description": "YYYY-MM-DD" },
+        "type": { "type": "string", "enum": ["canceled", "additional"] },
+        "classId": { "type": "string", "description": "ID of the canceled static class" },
+        "startTime": { "type": "string", "description": "HH:mm" },
+        "endTime": { "type": "string", "description": "HH:mm" },
+        "module": { "type": "string" },
+        "professor": { "type": "string" },
+        "room": { "type": "string" }
+      },
+      "required": ["date", "type"]
+    }
+  },
+  "firestore": {
+    "/classes/{classId}": {
+      "schema": { "$ref": "#/entities/Class" },
+      "description": "Static weekly classes"
+    },
+    "/exceptions/{exceptionId}": {
+      "schema": { "$ref": "#/entities/Exception" },
+      "description": "Cancellations and additional classes"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Class Schedule Calendar",
+  "description": "A weekly class schedule calendar with support for cancellations and additional classes, linked to Firebase without authentication.",
+  "requestFramePermissions": []
+}

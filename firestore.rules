@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: classes
+    // Document ID: auto-generated
+    // Fields:
+    //   - dayOfWeek: string (required)
+    //   - startTime: string (required)
+    //   - endTime: string (required)
+    //   - module: string (required)
+    //   - professor: string (required)
+    //   - room: string (required)
+    //
+    // Collection: exceptions
+    // Document ID: auto-generated
+    // Fields:
+    //   - date: string (required) - YYYY-MM-DD
+    //   - type: string (required) - 'canceled' or 'additional'
+    //   - classId: string (optional)
+    //   - startTime: string (optional)
+    //   - endTime: string (optional)
+    //   - module: string (optional)
+    //   - professor: string (optional)
+    //   - room: string (optional)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isValidClass(data) {
+      return data.keys().hasAll(['dayOfWeek', 'startTime', 'endTime', 'module', 'professor', 'room']) &&
+             data.dayOfWeek is string &&
+             data.startTime is string &&
+             data.endTime is string &&
+             data.module is string &&
+             data.professor is string &&
+             data.room is string &&
+             (!data.keys().hasAny(['note']) || data.note is string);
+    }
+
+    function isValidException(data) {
+      return data.keys().hasAll(['date', 'type']) &&
+             data.date is string &&
+             data.type in ['canceled', 'additional'] &&
+             (!data.keys().hasAny(['note']) || data.note is string);
+    }
+
+    // User explicitly requested no auth
+    match /classes/{classId} {
+      allow read: if true;
+      allow create, update: if isValidClass(request.resource.data);
+      allow delete: if true;
+    }
+
+    match /exceptions/{exceptionId} {
+      allow read: if true;
+      allow create, update: if isValidException(request.resource.data);
+      allow delete: if true;
+    }
+  }
+}
